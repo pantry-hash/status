@@ -1,7 +1,7 @@
 name: Update-template CI
 on:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 0 1 * *"
   workflow_dispatch:
 
 permissions:
@@ -11,9 +11,11 @@ permissions:
 
 jobs:
   update-template:
-    name: Run update-template
+    name: Update from template
     runs-on: ubuntu-latest
     steps:
       - uses: upptime/uptime-monitor@v1.41.0
         with:
-          command: "update-template"
+          command: "update"
+        env:
+          GH_PAT: ${{ secrets.GITHUB_TOKEN }}

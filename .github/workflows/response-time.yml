@@ -1,7 +1,7 @@
 name: Response-time CI
 on:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 23 * * *"
   workflow_dispatch:
 
 permissions:
@@ -11,9 +11,11 @@ permissions:
 
 jobs:
   response-time:
-    name: Run response-time
+    name: Check response time
     runs-on: ubuntu-latest
     steps:
       - uses: upptime/uptime-monitor@v1.41.0
         with:
           command: "response-time"
+        env:
+          GH_PAT: ${{ secrets.GITHUB_TOKEN }}

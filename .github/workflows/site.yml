@@ -1,8 +1,9 @@
 name: Site CI
 on:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 1 * * *"
   workflow_dispatch:
+  repository_dispatch:
 
 permissions:
   contents: write
@@ -11,9 +12,11 @@ permissions:
 
 jobs:
   site:
-    name: Run site
+    name: Build status page
     runs-on: ubuntu-latest
     steps:
       - uses: upptime/uptime-monitor@v1.41.0
         with:
           command: "site"
+        env:
+          GH_PAT: ${{ secrets.GITHUB_TOKEN }}

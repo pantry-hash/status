@@ -11,9 +11,11 @@ permissions:
 
 jobs:
   graphs:
-    name: Run graphs
+    name: Generate graphs
     runs-on: ubuntu-latest
     steps:
       - uses: upptime/uptime-monitor@v1.41.0
         with:
           command: "graphs"
+        env:
+          GH_PAT: ${{ secrets.GITHUB_TOKEN }}
