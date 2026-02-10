@@ -16,35 +16,17 @@ permissions:
 
 jobs:
   uptime:
-    name: Uptime monitoring
+    name: Check status
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: upptime/uptime-monitor@v1.41.0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run Upptime
+        uses: upptime/uptime-monitor@v1.41.0
         with:
-          command: "readme"
-        env:
-          GH_PAT: ${{ secrets.GITHUB_TOKEN }}
-      - uses: upptime/uptime-monitor@v1.41.0
-        with:
-          command: "site"
-        env:
-          GH_PAT: ${{ secrets.GITHUB_TOKEN }}
-      - uses: upptime/uptime-monitor@v1.41.0
-        with:
-          command: "graphs"
-        env:
-          GH_PAT: ${{ secrets.GITHUB_TOKEN }}
-      - uses: upptime/uptime-monitor@v1.41.0
-        with:
-          command: "response-time"
-        env:
-          GH_PAT: ${{ secrets.GITHUB_TOKEN }}
-      - uses: upptime/uptime-monitor@v1.41.0
-        with:
-          command: "summary"
+          command: "update"
         env:
           GH_PAT: ${{ secrets.GITHUB_TOKEN }}
