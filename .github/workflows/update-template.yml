@@ -1,0 +1,13 @@
+name: Update Template CI
+on:
+  schedule:
+    - cron: "0 0 1 * *"
+  workflow_dispatch:
+jobs:
+  update-template:
+    name: Update from template
+    runs-on: ubuntu-latest
+    steps:
+      - uses: upptime/uptime-monitor@v1
+        with:
+          command: "update"

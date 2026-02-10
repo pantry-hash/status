@@ -1,0 +1,67 @@
+# BakedIn Status Page Configuration
+# Powered by Upptime - https://upptime.js.org
+
+owner: pantry-hash
+repo: status
+
+sites:
+  - name: BakedIn Website
+    url: https://bakedin.co
+    icon: https://bakedin.co/favicon.png
+    
+  - name: Production API
+    url: https://bakedin.co/api/health
+    expectedStatusCodes:
+      - 200
+      - 404  # May not exist yet
+      
+  - name: Staging API
+    url: https://staging.bakedin.co/health
+    expectedStatusCodes:
+      - 200
+      
+  - name: MCP Research
+    url: https://mcp.bakedin.co/research/health
+    expectedStatusCodes:
+      - 200
+      
+  - name: MCP CI/CD
+    url: https://mcp.bakedin.co/cicd/health
+    expectedStatusCodes:
+      - 200
+      
+  - name: MCP Dashboard
+    url: https://mcp.bakedin.co/dashboard/health
+    expectedStatusCodes:
+      - 200
+
+status-website:
+  cname: status.bakedin.co
+  name: BakedIn Status
+  introTitle: "**BakedIn** is the AI-powered cannabis concierge platform"
+  introMessage: This page shows real-time availability and incident history for all BakedIn services. We are committed to transparency and rapid incident resolution.
+  navbar:
+    - title: Status
+      href: /
+    - title: BakedIn
+      href: https://bakedin.co
+    - title: Support
+      href: https://bakedin.co/support
+
+# Incident management
+assignees:
+  - glenmarkoss  # Update with your GitHub username
+
+# Commit messages
+commitMessages:
+  commitAuthorName: "Upptime Bot"
+  commitAuthorEmail: "upptime@bakedin.co"
+
+# Check frequency (in minutes, minimum 5)
+workflowSchedule:
+  graphs: "0 0 * * *"  # Daily graphs update
+  responseTime: "0 23 * * *"  # Daily response time
+  staticSite: "0 1 * * *"  # Daily site rebuild
+  summary: "0 0 * * *"  # Daily summary
+  updateTemplate: "0 0 1 * *"  # Monthly template update
+  uptime: "*/5 * * * *"  # Every 5 minutes
