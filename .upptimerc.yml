@@ -1,45 +1,41 @@
-# BakedIn Status Page Configuration
+# BakedIn Public Status Page
 # Powered by Upptime - https://upptime.js.org
+#
+# PUBLIC-FACING ONLY - Internal services monitored via CloudWatch
+# See ADR-007: Public vs Internal Status Page Separation
 
 owner: pantry-hash
 repo: status
 
 sites:
-  - name: BakedIn Website
+  - name: Website
     url: https://bakedin.co
     icon: https://bakedin.co/favicon.png
     
-  - name: Production API
+  - name: API
     url: https://bakedin.co/api/health
     expectedStatusCodes:
       - 200
       - 404  # May not exist yet
       
-  - name: Staging API
-    url: https://staging.bakedin.co/health
+  - name: Widget CDN
+    url: https://cdn.bakedin.co/widget.js
     expectedStatusCodes:
       - 200
-      
-  - name: MCP Research
-    url: https://mcp.bakedin.co/research/health
-    expectedStatusCodes:
-      - 200
-      
-  - name: MCP CI/CD
-    url: https://mcp.bakedin.co/cicd/health
-    expectedStatusCodes:
-      - 200
-      
-  - name: MCP Dashboard
-    url: https://mcp.bakedin.co/dashboard/health
-    expectedStatusCodes:
-      - 200
+      - 403  # CloudFront may block without referer
+
+# Internal services (MCP, staging, Neptune, RDS) monitored via:
+# - CloudWatch Dashboard: bakedin-production-overview
+# - Route53 Health Checks (8 global regions)
+# - 29 CloudWatch Alarms
 
 status-website:
   cname: status.bakedin.co
   name: BakedIn Status
-  introTitle: "**BakedIn** is the AI-powered cannabis concierge platform"
-  introMessage: This page shows real-time availability and incident history for all BakedIn services. We are committed to transparency and rapid incident resolution.
+  introTitle: "**BakedIn** System Status"
+  introMessage: |
+    Real-time availability and incident history for BakedIn services.
+    We are committed to 99.9% uptime and transparent incident communication.
   navbar:
     - title: Status
       href: /
@@ -50,18 +46,18 @@ status-website:
 
 # Incident management
 assignees:
-  - glenmarkoss  # Update with your GitHub username
+  - glenmarkoss
 
-# Commit messages
+# Commit settings
 commitMessages:
   commitAuthorName: "Upptime Bot"
   commitAuthorEmail: "upptime@bakedin.co"
 
-# Check frequency (in minutes, minimum 5)
+# Check frequency
 workflowSchedule:
-  graphs: "0 0 * * *"  # Daily graphs update
-  responseTime: "0 23 * * *"  # Daily response time
-  staticSite: "0 1 * * *"  # Daily site rebuild
-  summary: "0 0 * * *"  # Daily summary
-  updateTemplate: "0 0 1 * *"  # Monthly template update
-  uptime: "*/5 * * * *"  # Every 5 minutes
+  graphs: "0 0 * * *"
+  responseTime: "0 23 * * *"
+  staticSite: "0 1 * * *"
+  summary: "0 0 * * *"
+  updateTemplate: "0 0 1 * *"
+  uptime: "*/5 * * * *"
