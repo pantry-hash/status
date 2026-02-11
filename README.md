@@ -11,14 +11,14 @@ Visit **[status.bakedin.co](https://status.bakedin.co)** to see the current stat
 
 ## Monitored Services
 
-| Service | Description |
-|---------|-------------|
-| BakedIn Website | Main marketing site |
-| Production API | Backend API services |
-| Staging API | Pre-production testing |
-| MCP Research | Research MCP server |
-| MCP CI/CD | CI/CD MCP server |
-| MCP Dashboard | Dashboard MCP server |
+| Service         | Description            |
+| --------------- | ---------------------- |
+| BakedIn Website | Main marketing site    |
+| Production API  | Backend API services   |
+| Staging API     | Pre-production testing |
+| MCP Research    | Research MCP server    |
+| MCP CI/CD       | CI/CD MCP server       |
+| MCP Dashboard   | Dashboard MCP server   |
 
 ## How It Works
 
