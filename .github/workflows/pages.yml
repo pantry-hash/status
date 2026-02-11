@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - master
   workflow_dispatch:
 
 permissions:
@@ -22,26 +21,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
+
       - name: Build status site
         run: |
           mkdir -p _site
-          # Copy status page assets if they exist
-          if [ -d "status-page" ]; then
-            cp -r status-page/* _site/
-          elif [ -f "index.html" ]; then
-            cp *.html _site/ 2>/dev/null || true
-            cp *.css _site/ 2>/dev/null || true
-            cp *.js _site/ 2>/dev/null || true
-          else
-            # Create a simple status page from README
-            echo "<!DOCTYPE html><html><head><title>BakedIn Status</title></head><body>" > _site/index.html
-            echo "<h1>BakedIn Status Page</h1>" >> _site/index.html
-            echo "<p>Status page is being configured. Check back soon.</p>" >> _site/index.html
-            echo "<p><a href='https://github.com/pantry-hash/status'>View on GitHub</a></p>" >> _site/index.html
-            echo "</body></html>" >> _site/index.html
-          fi
+          cp index.html _site/
+          cp -r history _site/
+          echo "status.bakedin.co" > _site/CNAME
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 

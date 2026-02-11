@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BakedIn Status</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        header { text-align: center; color: white; margin-bottom: 40px; }
+        header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        header p { opacity: 0.9; }
+        .status-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .overall-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+        .status-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        .status-indicator.operational { background: #22c55e; }
+        .status-indicator.degraded { background: #f59e0b; }
+        .status-indicator.down { background: #ef4444; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .service-list { list-style: none; }
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .service-item:last-child { border-bottom: none; }
+        .service-name { font-weight: 500; color: #1f2937; }
+        .service-status {
+            font-size: 0.875rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+        .service-status.up { background: #dcfce7; color: #166534; }
+        .service-status.down { background: #fee2e2; color: #991b1b; }
+        .uptime-bar {
+            height: 30px;
+            display: flex;
+            gap: 2px;
+            margin: 20px 0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .uptime-day {
+            flex: 1;
+            background: #22c55e;
+            transition: background 0.3s;
+        }
+        .uptime-day.down { background: #ef4444; }
+        .uptime-day.partial { background: #f59e0b; }
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            opacity: 0.8;
+        }
+        footer a { color: white; }
+        .loading { text-align: center; padding: 40px; color: #6b7280; }
+        #last-updated { font-size: 0.875rem; color: #6b7280; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>BakedIn Status</h1>
+            <p>Real-time system status and incident history</p>
+        </header>
+
+        <div class="status-card">
+            <div class="overall-status">
+                <div class="status-indicator operational" id="overall-indicator"></div>
+                <div>
+                    <h2 id="overall-text">All Systems Operational</h2>
+                    <p id="uptime-text" style="color: #6b7280; font-size: 0.875rem;">Loading uptime data...</p>
+                </div>
+            </div>
+
+            <ul class="service-list" id="service-list">
+                <li class="loading">Loading services...</li>
+            </ul>
+
+            <div id="last-updated"></div>
+        </div>
+
+        <footer>
+            <p>Powered by <a href="https://upptime.js.org">Upptime</a> | <a href="https://bakedin.co">BakedIn</a></p>
+        </footer>
+    </div>
+
+    <script>
+        async function loadStatus() {
+            try {
+                const response = await fetch('history/summary.json');
+                const data = await response.json();
+
+                const serviceList = document.getElementById('service-list');
+                serviceList.innerHTML = '';
+
+                let allUp = true;
+                let anyDown = false;
+
+                for (const [name, info] of Object.entries(data)) {
+                    const isUp = info.status === 'up';
+                    if (!isUp) {
+                        allUp = false;
+                        anyDown = true;
+                    }
+
+                    const li = document.createElement('li');
+                    li.className = 'service-item';
+                    li.innerHTML = `
+                        <span class="service-name">${name}</span>
+                        <span class="service-status ${isUp ? 'up' : 'down'}">
+                            ${isUp ? 'Operational' : 'Down'}
+                        </span>
+                    `;
+                    serviceList.appendChild(li);
+                }
+
+                const indicator = document.getElementById('overall-indicator');
+                const overallText = document.getElementById('overall-text');
+
+                if (allUp) {
+                    indicator.className = 'status-indicator operational';
+                    overallText.textContent = 'All Systems Operational';
+                } else if (anyDown) {
+                    indicator.className = 'status-indicator down';
+                    overallText.textContent = 'Some Systems Down';
+                } else {
+                    indicator.className = 'status-indicator degraded';
+                    overallText.textContent = 'Degraded Performance';
+                }
+
+                document.getElementById('last-updated').textContent =
+                    `Last updated: ${new Date().toLocaleString()}`;
+
+            } catch (error) {
+                document.getElementById('service-list').innerHTML =
+                    '<li class="loading">Unable to load status. <a href="https://github.com/pantry-hash/status">Check GitHub</a></li>';
+            }
+        }
+
+        loadStatus();
+        setInterval(loadStatus, 60000); // Refresh every minute
+    </script>
+</body>
+</html>
