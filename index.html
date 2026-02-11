@@ -3,173 +3,438 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BakedIn Status</title>
+    <title>System Status | BakedIn</title>
+    <meta name="description" content="Real-time system status for BakedIn services">
+    <link rel="icon" href="https://bakedin.co/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --gold: #947619;
+            --gold-light: #b8942e;
+            --gold-glow: rgba(148, 118, 25, 0.4);
+            --bg-dark: #0d0c0a;
+            --bg-card: #1a1815;
+            --bg-card-hover: #252219;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --success: #22c55e;
+            --success-glow: rgba(34, 197, 94, 0.3);
+            --warning: #f59e0b;
+            --warning-glow: rgba(245, 158, 11, 0.3);
+            --error: #ef4444;
+            --error-glow: rgba(239, 68, 68, 0.3);
+            --border: rgba(148, 118, 25, 0.2);
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
             min-height: 100vh;
-            padding: 40px 20px;
+            color: var(--text-primary);
+            overflow-x: hidden;
         }
-        .container { max-width: 800px; margin: 0 auto; }
-        header { text-align: center; color: white; margin-bottom: 40px; }
-        header h1 { font-size: 2.5rem; margin-bottom: 10px; }
-        header p { opacity: 0.9; }
-        .status-card {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        .bg-pattern {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.025;
+            background-image:
+                linear-gradient(rgba(148, 118, 25, 0.5) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 118, 25, 0.5) 1px, transparent 1px);
+            background-size: 80px 80px;
         }
-        .overall-status {
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% 0%, rgba(148, 118, 25, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(148, 118, 25, 0.08) 0%, transparent 40%);
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 24px;
+            position: relative;
+            z-index: 10;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .logo {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-            margin-bottom: 20px;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            text-decoration: none;
         }
-        .status-indicator {
-            width: 20px;
-            height: 20px;
+        .logo img {
+            height: 48px;
+            filter: drop-shadow(0 0 20px var(--gold-glow));
+        }
+        .logo-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .logo-text span {
+            color: var(--gold);
+        }
+        h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        .status-banner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 20px 32px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 32px;
+            transition: all 0.3s ease;
+        }
+        .status-banner.operational {
+            border-color: rgba(34, 197, 94, 0.3);
+            box-shadow: 0 0 40px rgba(34, 197, 94, 0.1);
+        }
+        .status-banner.degraded {
+            border-color: rgba(245, 158, 11, 0.3);
+            box-shadow: 0 0 40px rgba(245, 158, 11, 0.1);
+        }
+        .status-banner.outage {
+            border-color: rgba(239, 68, 68, 0.3);
+            box-shadow: 0 0 40px rgba(239, 68, 68, 0.1);
+        }
+        .status-dot {
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
-            animation: pulse 2s infinite;
+            position: relative;
         }
-        .status-indicator.operational { background: #22c55e; }
-        .status-indicator.degraded { background: #f59e0b; }
-        .status-indicator.down { background: #ef4444; }
+        .status-dot::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .status-dot.operational {
+            background: var(--success);
+            box-shadow: 0 0 12px var(--success-glow);
+        }
+        .status-dot.operational::before {
+            background: var(--success);
+            opacity: 0.3;
+        }
+        .status-dot.degraded {
+            background: var(--warning);
+            box-shadow: 0 0 12px var(--warning-glow);
+        }
+        .status-dot.degraded::before {
+            background: var(--warning);
+            opacity: 0.3;
+        }
+        .status-dot.outage {
+            background: var(--error);
+            box-shadow: 0 0 12px var(--error-glow);
+        }
+        .status-dot.outage::before {
+            background: var(--error);
+            opacity: 0.3;
+        }
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.5); opacity: 0; }
         }
-        .service-list { list-style: none; }
+        .status-text {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+        .status-text.operational { color: var(--success); }
+        .status-text.degraded { color: var(--warning); }
+        .status-text.outage { color: var(--error); }
+        .services-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 32px;
+        }
+        .services-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        .services-header h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+        }
+        .uptime-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .service-list {
+            list-style: none;
+        }
         .service-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #f3f4f6;
+            justify-content: space-between;
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s ease;
         }
-        .service-item:last-child { border-bottom: none; }
-        .service-name { font-weight: 500; color: #1f2937; }
-        .service-status {
-            font-size: 0.875rem;
-            padding: 4px 12px;
-            border-radius: 20px;
+        .service-item:last-child {
+            border-bottom: none;
         }
-        .service-status.up { background: #dcfce7; color: #166534; }
-        .service-status.down { background: #fee2e2; color: #991b1b; }
-        .uptime-bar {
-            height: 30px;
+        .service-item:hover {
+            background: var(--bg-card-hover);
+        }
+        .service-info {
             display: flex;
-            gap: 2px;
-            margin: 20px 0;
-            border-radius: 4px;
-            overflow: hidden;
+            align-items: center;
+            gap: 14px;
         }
-        .uptime-day {
-            flex: 1;
-            background: #22c55e;
-            transition: background 0.3s;
+        .service-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
         }
-        .uptime-day.down { background: #ef4444; }
-        .uptime-day.partial { background: #f59e0b; }
+        .service-dot.up {
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success-glow);
+        }
+        .service-dot.degraded {
+            background: var(--warning);
+            box-shadow: 0 0 8px var(--warning-glow);
+        }
+        .service-dot.down {
+            background: var(--error);
+            box-shadow: 0 0 8px var(--error-glow);
+        }
+        .service-name {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .service-meta {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        .service-uptime {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-variant-numeric: tabular-nums;
+        }
+        .service-response {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            min-width: 70px;
+            text-align: right;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        @media (max-width: 600px) {
+            .metrics-grid { grid-template-columns: 1fr; }
+            .service-meta { gap: 16px; }
+            .service-response { display: none; }
+        }
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .metric-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 0 30px rgba(148, 118, 25, 0.1);
+        }
+        .metric-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2rem;
+            font-weight: 500;
+            color: var(--gold);
+            margin-bottom: 4px;
+        }
+        .metric-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
         footer {
             text-align: center;
-            color: white;
-            margin-top: 40px;
-            opacity: 0.8;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
         }
-        footer a { color: white; }
-        .loading { text-align: center; padding: 40px; color: #6b7280; }
-        #last-updated { font-size: 0.875rem; color: #6b7280; margin-top: 20px; }
+        footer p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        footer a {
+            color: var(--gold);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        footer a:hover {
+            color: var(--gold-light);
+        }
+        .last-updated {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 12px;
+        }
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            color: var(--text-muted);
+        }
+        .loading::after {
+            content: '';
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--border);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 12px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
+    <div class="bg-pattern"></div>
+    <div class="bg-glow"></div>
     <div class="container">
         <header>
-            <h1>BakedIn Status</h1>
-            <p>Real-time system status and incident history</p>
+            <a class="logo" href="https://bakedin.co">
+                <img src="https://bakedin.co/bakedin_gold_logo.png" alt="BakedIn">
+                <span class="logo-text">Baked<span>In</span></span>
+            </a>
+            <h1>System Status</h1>
+            <p>Real-time monitoring of all BakedIn services</p>
         </header>
-
-        <div class="status-card">
-            <div class="overall-status">
-                <div class="status-indicator operational" id="overall-indicator"></div>
-                <div>
-                    <h2 id="overall-text">All Systems Operational</h2>
-                    <p id="uptime-text" style="color: #6b7280; font-size: 0.875rem;">Loading uptime data...</p>
-                </div>
-            </div>
-
-            <ul class="service-list" id="service-list">
-                <li class="loading">Loading services...</li>
-            </ul>
-
-            <div id="last-updated"></div>
+        <div class="status-banner operational" id="overall-status">
+            <div class="status-dot operational"></div>
+            <span class="status-text operational">All Systems Operational</span>
         </div>
-
+        <div class="services-card">
+            <div class="services-header">
+                <h2>Services</h2>
+                <span class="uptime-label">30-day uptime</span>
+            </div>
+            <ul class="service-list" id="service-list">
+                <li class="loading">Loading status...</li>
+            </ul>
+        </div>
+        <div class="metrics-grid" id="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value" id="avg-uptime">--</div>
+                <div class="metric-label">Avg Uptime</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="services-up">--</div>
+                <div class="metric-label">Services Up</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="incidents">0</div>
+                <div class="metric-label">Incidents (30d)</div>
+            </div>
+        </div>
         <footer>
-            <p>Powered by <a href="https://upptime.js.org">Upptime</a> | <a href="https://bakedin.co">BakedIn</a></p>
+            <p>Powered by <a href="https://upptime.js.org" target="_blank" rel="noopener">Upptime</a></p>
+            <p class="last-updated" id="last-updated">Last updated: --</p>
         </footer>
     </div>
-
     <script>
         async function loadStatus() {
             try {
                 const response = await fetch('history/summary.json');
-                const data = await response.json();
-
+                const services = await response.json();
                 const serviceList = document.getElementById('service-list');
-                serviceList.innerHTML = '';
-
-                let allUp = true;
-                let anyDown = false;
-
-                for (const [name, info] of Object.entries(data)) {
-                    const isUp = info.status === 'up';
-                    if (!isUp) {
-                        allUp = false;
-                        anyDown = true;
+                let html = '';
+                let upCount = 0;
+                let totalUptime = 0;
+                let validUptimeCount = 0;
+                services.forEach(function(service) {
+                    const isUp = service.status === 'up';
+                    const statusClass = isUp ? 'up' : (service.status === 'degraded' ? 'degraded' : 'down');
+                    if (isUp) upCount++;
+                    const uptime = parseFloat(service.uptimeMonth) || 0;
+                    if (uptime > 0) {
+                        totalUptime += uptime;
+                        validUptimeCount++;
                     }
-
-                    const li = document.createElement('li');
-                    li.className = 'service-item';
-                    li.innerHTML = `
-                        <span class="service-name">${name}</span>
-                        <span class="service-status ${isUp ? 'up' : 'down'}">
-                            ${isUp ? 'Operational' : 'Down'}
-                        </span>
-                    `;
-                    serviceList.appendChild(li);
-                }
-
-                const indicator = document.getElementById('overall-indicator');
-                const overallText = document.getElementById('overall-text');
-
+                    const responseTime = service.timeMonth ? Math.round(service.timeMonth) + 'ms' : '--';
+                    html += '<li class="service-item">' +
+                        '<div class="service-info">' +
+                        '<div class="service-dot ' + statusClass + '"></div>' +
+                        '<span class="service-name">' + service.name + '</span>' +
+                        '</div>' +
+                        '<div class="service-meta">' +
+                        '<span class="service-uptime">' + uptime.toFixed(2) + '%</span>' +
+                        '<span class="service-response">' + responseTime + '</span>' +
+                        '</div></li>';
+                });
+                serviceList.innerHTML = html;
+                const avgUptime = validUptimeCount > 0 ? (totalUptime / validUptimeCount).toFixed(1) : '100';
+                document.getElementById('avg-uptime').textContent = avgUptime + '%';
+                document.getElementById('services-up').textContent = upCount + '/' + services.length;
+                const overallBanner = document.getElementById('overall-status');
+                const allUp = upCount === services.length;
+                const anyDown = services.some(function(s) { return s.status === 'down'; });
                 if (allUp) {
-                    indicator.className = 'status-indicator operational';
-                    overallText.textContent = 'All Systems Operational';
+                    overallBanner.className = 'status-banner operational';
+                    overallBanner.innerHTML = '<div class="status-dot operational"></div><span class="status-text operational">All Systems Operational</span>';
                 } else if (anyDown) {
-                    indicator.className = 'status-indicator down';
-                    overallText.textContent = 'Some Systems Down';
+                    overallBanner.className = 'status-banner outage';
+                    overallBanner.innerHTML = '<div class="status-dot outage"></div><span class="status-text outage">Service Disruption</span>';
                 } else {
-                    indicator.className = 'status-indicator degraded';
-                    overallText.textContent = 'Degraded Performance';
+                    overallBanner.className = 'status-banner degraded';
+                    overallBanner.innerHTML = '<div class="status-dot degraded"></div><span class="status-text degraded">Partial Outage</span>';
                 }
-
-                document.getElementById('last-updated').textContent =
-                    `Last updated: ${new Date().toLocaleString()}`;
-
+                document.getElementById('last-updated').textContent = 'Last updated: ' + new Date().toLocaleString();
             } catch (error) {
-                document.getElementById('service-list').innerHTML =
-                    '<li class="loading">Unable to load status. <a href="https://github.com/pantry-hash/status">Check GitHub</a></li>';
+                console.error('Failed to load status:', error);
+                document.getElementById('service-list').innerHTML = '<li class="service-item"><div class="service-info"><div class="service-dot down"></div><span class="service-name">Unable to load status data</span></div></li>';
             }
         }
-
         loadStatus();
-        setInterval(loadStatus, 60000); // Refresh every minute
+        setInterval(loadStatus, 60000);
     </script>
 </body>
 </html>
