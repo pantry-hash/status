@@ -1,59 +1,70 @@
-# BakedIn Public Status Page
+# BakedIn System Status
 # Powered by Upptime - https://upptime.js.org
-#
-# PUBLIC-FACING ONLY - Internal services monitored via CloudWatch
-# See ADR-007: Public vs Internal Status Page Separation
 
 owner: pantry-hash
 repo: status
 
 sites:
-  - name: Website
+  # ═══════════════════════════════════════════════════════════════
+  # CUSTOMER-FACING SERVICES
+  # ═══════════════════════════════════════════════════════════════
+
+  - name: Marketing Website
     url: https://bakedin.co
     icon: https://bakedin.co/favicon.png
-    
-  - name: API
-    url: https://bakedin.co/api/health
-    expectedStatusCodes:
-      - 200
-      - 404  # May not exist yet
-      
-  - name: Widget CDN
-    url: https://cdn.bakedin.co/widget.js
-    expectedStatusCodes:
-      - 200
-      - 403  # CloudFront may block without referer
 
-# Internal services (MCP, staging, Neptune, RDS) monitored via:
+  - name: Staging Environment
+    url: https://staging.bakedin.co
+    icon: https://bakedin.co/favicon.png
+
+  # ═══════════════════════════════════════════════════════════════
+  # AI INFRASTRUCTURE
+  # ═══════════════════════════════════════════════════════════════
+
+  - name: MCP Gateway
+    url: https://mcp.bakedin.co/health
+
+  - name: Research MCP
+    url: https://mcp.bakedin.co/research/health
+
+  - name: Knowledge Graph MCP
+    url: https://mcp.bakedin.co/knowledge/health
+
+  - name: CI/CD MCP
+    url: https://mcp.bakedin.co/cicd/health
+
+  - name: Dashboard MCP
+    url: https://mcp.bakedin.co/dashboard/health
+
+  - name: Context MCP
+    url: https://mcp.bakedin.co/context/health
+
+  - name: Assets MCP
+    url: https://mcp.bakedin.co/assets/health
+
+  - name: AI Investigator MCP
+    url: https://mcp.bakedin.co/ai-investigator/health
+
+# Internal services (GPU, Neptune, RDS, Security MCP) monitored via:
 # - CloudWatch Dashboard: bakedin-production-overview
 # - Route53 Health Checks (8 global regions)
 # - 29 CloudWatch Alarms
+#
+# GPU Inference Server (g6.xlarge) - Not externally accessible
+# Neptune Graph Database - VPC internal only
+# PostgreSQL RDS - VPC internal only
 
 status-website:
   cname: status.bakedin.co
   name: BakedIn Status
-  introTitle: "**BakedIn** System Status"
-  introMessage: |
-    Real-time availability and incident history for BakedIn services.
-    We are committed to 99.9% uptime and transparent incident communication.
-  navbar:
-    - title: Status
-      href: /
-    - title: BakedIn
-      href: https://bakedin.co
-    - title: Support
-      href: https://bakedin.co/support
 
-# Incident management
 assignees:
   - glenmarkoss
 
-# Commit settings
 commitMessages:
   commitAuthorName: "Upptime Bot"
   commitAuthorEmail: "upptime@bakedin.co"
 
-# Check frequency
 workflowSchedule:
   graphs: "0 0 * * *"
   responseTime: "0 23 * * *"

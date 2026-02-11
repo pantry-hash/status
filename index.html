@@ -57,7 +57,7 @@
                 radial-gradient(ellipse 60% 40% at 80% 80%, rgba(148, 118, 25, 0.08) 0%, transparent 40%);
         }
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             padding: 60px 24px;
             position: relative;
@@ -85,9 +85,7 @@
             font-weight: 500;
             color: var(--text-primary);
         }
-        .logo-text span {
-            color: var(--gold);
-        }
+        .logo-text span { color: var(--gold); }
         h1 {
             font-family: 'Playfair Display', Georgia, serif;
             font-size: 2rem;
@@ -136,30 +134,12 @@
             border-radius: 50%;
             animation: pulse 2s ease-in-out infinite;
         }
-        .status-dot.operational {
-            background: var(--success);
-            box-shadow: 0 0 12px var(--success-glow);
-        }
-        .status-dot.operational::before {
-            background: var(--success);
-            opacity: 0.3;
-        }
-        .status-dot.degraded {
-            background: var(--warning);
-            box-shadow: 0 0 12px var(--warning-glow);
-        }
-        .status-dot.degraded::before {
-            background: var(--warning);
-            opacity: 0.3;
-        }
-        .status-dot.outage {
-            background: var(--error);
-            box-shadow: 0 0 12px var(--error-glow);
-        }
-        .status-dot.outage::before {
-            background: var(--error);
-            opacity: 0.3;
-        }
+        .status-dot.operational { background: var(--success); box-shadow: 0 0 12px var(--success-glow); }
+        .status-dot.operational::before { background: var(--success); opacity: 0.3; }
+        .status-dot.degraded { background: var(--warning); box-shadow: 0 0 12px var(--warning-glow); }
+        .status-dot.degraded::before { background: var(--warning); opacity: 0.3; }
+        .status-dot.outage { background: var(--error); box-shadow: 0 0 12px var(--error-glow); }
+        .status-dot.outage::before { background: var(--error); opacity: 0.3; }
         @keyframes pulse {
             0%, 100% { transform: scale(1); opacity: 0.3; }
             50% { transform: scale(1.5); opacity: 0; }
@@ -177,7 +157,7 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             overflow: hidden;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
         .services-header {
             display: flex;
@@ -194,31 +174,30 @@
             text-transform: uppercase;
             color: var(--text-secondary);
         }
+        .services-header .icon {
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
         .uptime-label {
             font-size: 0.8rem;
             color: var(--text-muted);
         }
-        .service-list {
-            list-style: none;
-        }
+        .service-list { list-style: none; }
         .service-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 18px 24px;
+            padding: 16px 24px;
             border-bottom: 1px solid var(--border);
             transition: background 0.2s ease;
         }
-        .service-item:last-child {
-            border-bottom: none;
-        }
-        .service-item:hover {
-            background: var(--bg-card-hover);
-        }
+        .service-item:last-child { border-bottom: none; }
+        .service-item:hover { background: var(--bg-card-hover); }
         .service-info {
             display: flex;
             align-items: center;
             gap: 14px;
+            flex: 1;
         }
         .service-dot {
             width: 10px;
@@ -226,21 +205,18 @@
             border-radius: 50%;
             flex-shrink: 0;
         }
-        .service-dot.up {
-            background: var(--success);
-            box-shadow: 0 0 8px var(--success-glow);
-        }
-        .service-dot.degraded {
-            background: var(--warning);
-            box-shadow: 0 0 8px var(--warning-glow);
-        }
-        .service-dot.down {
-            background: var(--error);
-            box-shadow: 0 0 8px var(--error-glow);
-        }
+        .service-dot.up { background: var(--success); box-shadow: 0 0 8px var(--success-glow); }
+        .service-dot.degraded { background: var(--warning); box-shadow: 0 0 8px var(--warning-glow); }
+        .service-dot.down { background: var(--error); box-shadow: 0 0 8px var(--error-glow); }
+        .service-details { flex: 1; }
         .service-name {
             font-weight: 500;
             color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+        .service-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
         }
         .service-meta {
             display: flex;
@@ -258,16 +234,61 @@
             min-width: 70px;
             text-align: right;
         }
+        .infra-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .infra-card h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        .infra-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .infra-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--bg-dark);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .infra-icon {
+            font-size: 1.5rem;
+            opacity: 0.8;
+        }
+        .infra-details h4 {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+        .infra-details p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 16px;
             margin-bottom: 32px;
         }
-        @media (max-width: 600px) {
-            .metrics-grid { grid-template-columns: 1fr; }
+        @media (max-width: 700px) {
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
             .service-meta { gap: 16px; }
             .service-response { display: none; }
+            .service-desc { display: none; }
         }
         .metric-card {
             background: var(--bg-card);
@@ -283,13 +304,13 @@
         }
         .metric-value {
             font-family: 'Playfair Display', Georgia, serif;
-            font-size: 2rem;
+            font-size: 1.75rem;
             font-weight: 500;
             color: var(--gold);
             margin-bottom: 4px;
         }
         .metric-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -308,9 +329,7 @@
             text-decoration: none;
             transition: color 0.2s ease;
         }
-        footer a:hover {
-            color: var(--gold-light);
-        }
+        footer a:hover { color: var(--gold-light); }
         .last-updated {
             font-size: 0.75rem;
             color: var(--text-muted);
@@ -346,22 +365,68 @@
                 <span class="logo-text">Baked<span>In</span></span>
             </a>
             <h1>System Status</h1>
-            <p>Real-time monitoring of all BakedIn services</p>
+            <p>Real-time monitoring of BakedIn infrastructure</p>
         </header>
+
         <div class="status-banner operational" id="overall-status">
             <div class="status-dot operational"></div>
             <span class="status-text operational">All Systems Operational</span>
         </div>
+
+        <!-- Customer-Facing Services -->
         <div class="services-card">
             <div class="services-header">
-                <h2>Services</h2>
+                <h2><span class="icon">🌐</span>Customer-Facing Services</h2>
                 <span class="uptime-label">30-day uptime</span>
             </div>
-            <ul class="service-list" id="service-list">
-                <li class="loading">Loading status...</li>
-            </ul>
+            <ul class="service-list" id="customer-services"></ul>
         </div>
-        <div class="metrics-grid" id="metrics-grid">
+
+        <!-- AI Infrastructure -->
+        <div class="services-card">
+            <div class="services-header">
+                <h2><span class="icon">🤖</span>AI Infrastructure</h2>
+                <span class="uptime-label">30-day uptime</span>
+            </div>
+            <ul class="service-list" id="ai-services"></ul>
+        </div>
+
+        <!-- Internal Infrastructure -->
+        <div class="infra-card">
+            <h3>🔒 Internal Infrastructure (CloudWatch Monitored)</h3>
+            <div class="infra-grid">
+                <div class="infra-item">
+                    <span class="infra-icon">⚡</span>
+                    <div class="infra-details">
+                        <h4>GPU Inference</h4>
+                        <p>NVIDIA L4 (g6.xlarge)</p>
+                    </div>
+                </div>
+                <div class="infra-item">
+                    <span class="infra-icon">🗄️</span>
+                    <div class="infra-details">
+                        <h4>PostgreSQL</h4>
+                        <p>RDS db.t4g.micro</p>
+                    </div>
+                </div>
+                <div class="infra-item">
+                    <span class="infra-icon">🕸️</span>
+                    <div class="infra-details">
+                        <h4>Neptune Graph</h4>
+                        <p>Serverless Knowledge Graph</p>
+                    </div>
+                </div>
+                <div class="infra-item">
+                    <span class="infra-icon">🔐</span>
+                    <div class="infra-details">
+                        <h4>Security MCP</h4>
+                        <p>OWASP Scanning</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="metrics-grid">
             <div class="metric-card">
                 <div class="metric-value" id="avg-uptime">--</div>
                 <div class="metric-label">Avg Uptime</div>
@@ -371,52 +436,107 @@
                 <div class="metric-label">Services Up</div>
             </div>
             <div class="metric-card">
+                <div class="metric-value" id="response-time">--</div>
+                <div class="metric-label">Avg Response</div>
+            </div>
+            <div class="metric-card">
                 <div class="metric-value" id="incidents">0</div>
-                <div class="metric-label">Incidents (30d)</div>
+                <div class="metric-label">Incidents</div>
             </div>
         </div>
+
         <footer>
-            <p>Powered by <a href="https://upptime.js.org" target="_blank" rel="noopener">Upptime</a></p>
+            <p>Monitored by <a href="https://upptime.js.org" target="_blank" rel="noopener">Upptime</a> + <a href="https://aws.amazon.com/cloudwatch/" target="_blank" rel="noopener">CloudWatch</a></p>
             <p class="last-updated" id="last-updated">Last updated: --</p>
         </footer>
     </div>
+
     <script>
+        const serviceDescriptions = {
+            'Marketing Website': 'Public website at bakedin.co',
+            'Staging Environment': 'Pre-production testing environment',
+            'MCP Gateway': 'Model Context Protocol API gateway',
+            'Research MCP': 'OpenAlex, ArXiv, Papers with Code',
+            'Knowledge Graph MCP': 'Neptune graph database queries',
+            'CI/CD MCP': 'Pipeline control and deployments',
+            'Dashboard MCP': 'Metrics and visualization',
+            'Context MCP': 'Session context management',
+            'Assets MCP': 'Asset registry and tracking',
+            'AI Investigator MCP': 'AI research monitoring'
+        };
+
+        const customerServices = ['Marketing Website', 'Staging Environment'];
+        const aiServices = ['MCP Gateway', 'Research MCP', 'Knowledge Graph MCP', 'CI/CD MCP', 'Dashboard MCP', 'Context MCP', 'Assets MCP', 'AI Investigator MCP'];
+
+        function renderService(service) {
+            const isUp = service.status === 'up';
+            const statusClass = isUp ? 'up' : (service.status === 'degraded' ? 'degraded' : 'down');
+            const uptime = parseFloat(service.uptimeMonth) || 0;
+            const responseTime = service.timeMonth ? Math.round(service.timeMonth) + 'ms' : '--';
+            const desc = serviceDescriptions[service.name] || '';
+
+            return '<li class="service-item">' +
+                '<div class="service-info">' +
+                '<div class="service-dot ' + statusClass + '"></div>' +
+                '<div class="service-details">' +
+                '<div class="service-name">' + service.name + '</div>' +
+                '<div class="service-desc">' + desc + '</div>' +
+                '</div></div>' +
+                '<div class="service-meta">' +
+                '<span class="service-uptime">' + uptime.toFixed(2) + '%</span>' +
+                '<span class="service-response">' + responseTime + '</span>' +
+                '</div></li>';
+        }
+
         async function loadStatus() {
             try {
                 const response = await fetch('history/summary.json');
                 const services = await response.json();
-                const serviceList = document.getElementById('service-list');
-                let html = '';
+
+                let customerHtml = '';
+                let aiHtml = '';
                 let upCount = 0;
                 let totalUptime = 0;
+                let totalResponse = 0;
                 let validUptimeCount = 0;
+                let validResponseCount = 0;
+
                 services.forEach(function(service) {
-                    const isUp = service.status === 'up';
-                    const statusClass = isUp ? 'up' : (service.status === 'degraded' ? 'degraded' : 'down');
-                    if (isUp) upCount++;
+                    if (service.status === 'up') upCount++;
+
                     const uptime = parseFloat(service.uptimeMonth) || 0;
                     if (uptime > 0) {
                         totalUptime += uptime;
                         validUptimeCount++;
                     }
-                    const responseTime = service.timeMonth ? Math.round(service.timeMonth) + 'ms' : '--';
-                    html += '<li class="service-item">' +
-                        '<div class="service-info">' +
-                        '<div class="service-dot ' + statusClass + '"></div>' +
-                        '<span class="service-name">' + service.name + '</span>' +
-                        '</div>' +
-                        '<div class="service-meta">' +
-                        '<span class="service-uptime">' + uptime.toFixed(2) + '%</span>' +
-                        '<span class="service-response">' + responseTime + '</span>' +
-                        '</div></li>';
+
+                    const responseTime = parseFloat(service.timeMonth) || 0;
+                    if (responseTime > 0) {
+                        totalResponse += responseTime;
+                        validResponseCount++;
+                    }
+
+                    if (customerServices.includes(service.name)) {
+                        customerHtml += renderService(service);
+                    } else if (aiServices.includes(service.name)) {
+                        aiHtml += renderService(service);
+                    }
                 });
-                serviceList.innerHTML = html;
+
+                document.getElementById('customer-services').innerHTML = customerHtml || '<li class="loading">No customer services configured</li>';
+                document.getElementById('ai-services').innerHTML = aiHtml || '<li class="loading">No AI services configured</li>';
+
                 const avgUptime = validUptimeCount > 0 ? (totalUptime / validUptimeCount).toFixed(1) : '100';
+                const avgResponse = validResponseCount > 0 ? Math.round(totalResponse / validResponseCount) : '--';
+
                 document.getElementById('avg-uptime').textContent = avgUptime + '%';
                 document.getElementById('services-up').textContent = upCount + '/' + services.length;
+                document.getElementById('response-time').textContent = avgResponse + 'ms';
+
                 const overallBanner = document.getElementById('overall-status');
                 const allUp = upCount === services.length;
                 const anyDown = services.some(function(s) { return s.status === 'down'; });
+
                 if (allUp) {
                     overallBanner.className = 'status-banner operational';
                     overallBanner.innerHTML = '<div class="status-dot operational"></div><span class="status-text operational">All Systems Operational</span>';
@@ -427,12 +547,16 @@
                     overallBanner.className = 'status-banner degraded';
                     overallBanner.innerHTML = '<div class="status-dot degraded"></div><span class="status-text degraded">Partial Outage</span>';
                 }
+
                 document.getElementById('last-updated').textContent = 'Last updated: ' + new Date().toLocaleString();
+
             } catch (error) {
                 console.error('Failed to load status:', error);
-                document.getElementById('service-list').innerHTML = '<li class="service-item"><div class="service-info"><div class="service-dot down"></div><span class="service-name">Unable to load status data</span></div></li>';
+                document.getElementById('customer-services').innerHTML = '<li class="service-item"><div class="service-info"><div class="service-dot down"></div><span class="service-name">Unable to load status</span></div></li>';
+                document.getElementById('ai-services').innerHTML = '<li class="service-item"><div class="service-info"><div class="service-dot down"></div><span class="service-name">Unable to load status</span></div></li>';
             }
         }
+
         loadStatus();
         setInterval(loadStatus, 60000);
     </script>
